@@ -18,5 +18,5 @@ before_script:
 script: vendor/bin/phpunit
 
 notifications:
-  email: iakov@kamilabs.com
+  email: harammin@gmail.com
 
