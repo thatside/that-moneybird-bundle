@@ -1,6 +1,8 @@
 ThatMoneybirdBundle
 ==================
 
+[![Build Status](https://travis-ci.org/thatside/that-moneybird-bundle.svg?branch=master)](https://travis-ci.org/thatside/that-moneybird-bundle)
+
 MoneyBird Bundle for Symfony 2 Applications. Bundle provides wrapper for [moneybird-php-client](https://github.com/picqer/moneybird-php-client)
 
 Based on [KamiLabs work](https://github.com/kamilabs/MoneyBirdApiBundle)
