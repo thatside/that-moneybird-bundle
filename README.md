@@ -3,6 +3,8 @@ ThatMoneybirdBundle
 
 MoneyBird Bundle for Symfony 2 Applications. Bundle provides wrapper for [moneybird-php-client](https://github.com/picqer/moneybird-php-client)
 
+Based on [KamiLabs work](https://github.com/kamilabs/MoneyBirdApiBundle)
+
 TBD!!!
 
 Installation
@@ -17,7 +19,7 @@ $ php composer.phar require "thatside/that-moneybird-bundle"
 ```
 ### 2. Enable the bundle in the kernel:
 
-```php
+```
 <?php
 
 // app/AppKernel.php
@@ -35,7 +37,7 @@ public function registerBundles()
 ### 3. Configure the bundle:
 
 Add the following configuration to your config.yml.
-```yml
+```
 # app/config/config.yml
 that_moneybird:
     redirect_url: localhost
@@ -51,7 +53,7 @@ MoneyBird Service
 --------------
 
 Core component of this bundle is MoneyBird service.
-```php
+```
 <?php
     $this->get('that_moneybird'); /** @var \Picqer\Financials\Moneybird\Moneybird */
 ```
