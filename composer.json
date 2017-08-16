@@ -1,0 +1,33 @@
+{
+    "name":        "thatside/moneybird-bundle",
+    "type":        "symfony-bundle",
+    "description": "A Symfony2 bundle for working with Moneybird v2",
+    "keywords":    ["moneybird", "symfony2"],
+    "homepage":    "https://github.com/thatside/that-moneybird-bundle",
+    "license":     "MIT",
+
+    "authors": [
+        {
+            "name": "Bogdan Turchik",
+            "email": "harammin@gmail.com"
+        }
+    ],
+
+    "require": {
+        "php": ">=5.5.0",
+        "symfony/framework-bundle": ">=2.8",
+        "picqer/moneybird-php-client": "~0.9"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "~5.0"
+    },
+
+    "autoload": {
+        "psr-0": {
+           "Thatside\\MoneybirdBundle": ""
+        }
+    },
+
+    "target-dir": "Thatside/MoneybirdBundle"
+}

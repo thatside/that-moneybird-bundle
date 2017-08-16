@@ -1,0 +1,5 @@
+that_moneybird:
+    redirect_url: localhost
+    client_id: test_client_id
+    client_secret: test_client_secret
+    debug: true
