@@ -3,13 +3,10 @@ parameters:
     that_moneybird.client_id: ''
     that_moneybird.client_secret: ''
     that_moneybird.debug: ''
-    that_moneybird.connection.class: Picqer\Financials\Moneybird\Connection
-    that_moneybird.moneybird.class: Picqer\Financials\Moneybird\Moneybird
-    that_moneybird.class: Thatside\MoneybirdBundle\Services\ThatMoneybirdService
 
 services:
     that_moneybird.connection:
-        class: '%that_moneybird.connection.class%'
+        class: 'Picqer\Financials\Moneybird\Connection'
         public: false
         calls:
             - [setClientId, ['%that_moneybird.client_id%']]
@@ -18,10 +15,10 @@ services:
             - [setTesting, ['%that_moneybird.debug%']]
        
     that_moneybird.code_fetcher:
-        abstract: true
+        class: 'Thatside\MoneybirdBundle\Services\ThatMoneybirdCodeFetcherDummyService'
                    
     that_moneybird:
-        class: '%that_moneybird.class%'
+        class: 'Thatside\MoneybirdBundle\Services\ThatMoneybirdService'
         arguments: 
           - '@that_moneybird.connection'
           - '@that_moneybird.code_fetcher'

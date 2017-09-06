@@ -14,6 +14,7 @@ namespace Thatside\MoneybirdBundle\Tests\DependencyInjection;
 use Picqer\Financials\Moneybird\Connection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Thatside\MoneybirdBundle\DependencyInjection\ThatMoneybirdExtension;
+use Thatside\MoneybirdBundle\Services\ThatMoneybirdService;
 
 abstract class AbstractExtensionTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,10 +40,10 @@ abstract class AbstractExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->container->has('that_moneybird'));
 
         $moneybird = $this->container->get('that_moneybird');
-        /** @var Connection $connection */
-        $connection = $moneybird->getConnection();
 
-        $this->assertInstanceOf(Connection::class, $connection);
+        $this->assertInstanceOf(ThatMoneybirdService::class, $moneybird);
+        
+        $connection = $this->getPrivatePropertyOfInstance($moneybird, 'connection');
 
         $this->assertTrue($this->container->getParameter('that_moneybird.debug'));
         $this->assertTrue($connection->isTesting());
