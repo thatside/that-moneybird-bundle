@@ -11,8 +11,8 @@
 
 namespace Thatside\MoneybirdBundle\Tests\DependencyInjection;
 
-use Picqer\Financials\Moneybird\Connection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Thatside\MoneybirdBundle\DependencyInjection\ThatMoneybirdExtension;
 use Thatside\MoneybirdBundle\Services\ThatMoneybirdService;
 
@@ -28,6 +28,7 @@ abstract class AbstractExtensionTest extends \PHPUnit_Framework_TestCase
 
         $this->container = new ContainerBuilder();
         $this->container->registerExtension($this->extension);
+        $this->container->register('event_dispatcher', EventDispatcher::class);
     }
 
     abstract protected function loadConfiguration(ContainerBuilder $container, $resource);
