@@ -22,4 +22,5 @@ services:
         arguments: 
           - '@that_moneybird.connection'
           - '@that_moneybird.code_fetcher'
+          - '@event_dispatcher'
           
