@@ -12,12 +12,12 @@ class MoneybirdTokenEvent extends Event
     /** @var string  */
     protected $token;
 
-    public function __construct(string $token)
+    public function __construct($token)
     {
         $this->token = $token;
     }
 
-    public function getToken() : ?string
+    public function getToken()
     {
         return $this->token;
     }
