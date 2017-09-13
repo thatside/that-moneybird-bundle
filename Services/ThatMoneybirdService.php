@@ -39,10 +39,7 @@ class ThatMoneybirdService
             $this->connection->setAuthorizationCode($this->authCode);
 
             $this->updateToken();
-            dump($this->connection->getAccessToken());
             $this->connection->setAccessToken($this->token);
-            dump($this->token);
-            dump($this->connection->getAccessToken());
             
             try {
                 $this->connection->connect();
