@@ -6,8 +6,13 @@ namespace Thatside\MoneybirdBundle\Services;
 use Picqer\Financials\Moneybird\Connection;
 use Picqer\Financials\Moneybird\Moneybird;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thatside\MoneybirdBundle\Event\MoneybirdTokenEvent;
 
+/**
+ * Class ThatMoneybirdService
+ * Provides wrapper for Moneybird PHP client by picqer
+ */
 class ThatMoneybirdService
 {
     /** @var Connection  */
@@ -16,52 +21,59 @@ class ThatMoneybirdService
     protected $moneybird = null;
     /** @var  CodeFetcherInterface */
     protected $codeFetcher;
-    /** @var  EventDispatcherInterface */    
+    /** @var  EventDispatcherInterface */
     protected $eventDispatcher;
     /** @var  string|null */
     protected $authCode;
     /** @var  string */
     protected $token;
-    
+
+    /**
+     * ThatMoneybirdService constructor.
+     *
+     * @param Connection $connection
+     * @param CodeFetcherInterface $codeFetcher
+     * @param EventDispatcherInterface $dispatcher
+     */
     public function __construct(Connection $connection, CodeFetcherInterface $codeFetcher, EventDispatcherInterface $dispatcher)
     {
         $this->connection = $connection;
         $this->codeFetcher = $codeFetcher;
         $this->eventDispatcher = $dispatcher;
-        
+
         $this->initMoneybird();
     }
 
+    /**
+     * Initialize Moneybird connection and main class, set up token and refresh it if needed
+     *
+     * @throws \Exception
+     */
     public function initMoneybird()
     {
         if ($this->isMoneybirdEnabled()) {
-            $this->updateAuthCode();            
+            $this->updateAuthCode();
             $this->connection->setAuthorizationCode($this->authCode);
 
             $this->updateToken();
             $this->connection->setAccessToken($this->token);
-            
+
             try {
                 $this->connection->connect();
             } catch (\Exception $e) {
                 throw new \Exception('Could not connect to Moneybird: ' . $e->getMessage());
             }
-            
+
             $token = $this->connection->getAccessToken();
-            $this->eventDispatcher->dispatch(MoneybirdTokenEvent::NAME,new MoneybirdTokenEvent($token));
-            
+            $this->eventDispatcher->dispatch(MoneybirdTokenEvent::NAME, new MoneybirdTokenEvent($token));
+
             $this->moneybird = new Moneybird($this->connection);
         }
     }
-    
-    private function updateAuthCode() {
-        $this->authCode = $this->codeFetcher->getAuthorizationCode();
-    }
-    
-    private function updateToken() {
-        $this->token = $this->codeFetcher->getAuthorizationToken();
-    }
 
+    /**
+     * @return Moneybird
+     */
     public function getMoneybird()
     {
         return $this->moneybird;
@@ -76,18 +88,50 @@ class ThatMoneybirdService
         return $this->codeFetcher->getAuthorizationCode() !== null;
     }
 
+    /**
+     * @param string $id
+     */
     public function setAdministrationId($id)
     {
         $this->connection->setAdministrationId($id);
     }
 
-    public function authenticate()
+    /**
+     * Get Moneybird authorization URL from private method of Connection class
+     *
+     * @return string
+     */
+    public function getAuthUrl() : string
     {
-        $this->connection->redirectForAuthorization();
+        $connectionReflection = new \ReflectionClass($this->connection);
+        $getAuthUrlMethod = $connectionReflection->getMethod('getAuthUrl');
+        $getAuthUrlMethod->setAccessible(true);
+        $authUrl = $getAuthUrlMethod->invoke($this->connection);
+
+        return $authUrl;
     }
 
+    /**
+     * @return mixed
+     */
     public function getAdministrations()
     {
         return $this->moneybird->administration()->getAll();
+    }
+
+    /**
+     * Update authorization code from code fetcher
+     */
+    private function updateAuthCode()
+    {
+        $this->authCode = $this->codeFetcher->getAuthorizationCode();
+    }
+
+    /**
+     * Update auth token from code fetcher
+     */
+    private function updateToken()
+    {
+        $this->token = $this->codeFetcher->getAuthorizationToken();
     }
 }
