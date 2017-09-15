@@ -49,14 +49,29 @@ that_moneybird:
 ```
 
 Only first three configuration values are required to use the bundle.
+Redirect URL is required to be non-localhost so use any tunneling service to test.
+(https://github.com/beameio/beame-insta-ssl recommended).
 
+
+Tokens storage
+--------------
+
+You need to set things up first to store auth code and access token somewhere.
+1. Redefine `that_moneybird.code_fetcher` service with your own class (use `CodeFetcherInterface` for this).
+2. Add an event subscriber listening to `moneybird.token_update` event (see `MoneybirdTokenEvent`).
+3. Manually save authorization code after Moneybird authorization
 
 MoneyBird Service
 --------------
 
 Core component of this bundle is MoneyBird service.
+It provides simple wrapper around Picqer Moneybird class - it is available by `getMoneybird()` call.
+
+Still thinking on using `__call` here...
 ```
 <?php
-    $this->get('that_moneybird'); /** @var \Picqer\Financials\Moneybird\Moneybird */
+    $this->get('that_moneybird'); 
 ```
+
+
 
