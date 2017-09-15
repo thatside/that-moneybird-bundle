@@ -101,7 +101,7 @@ class ThatMoneybirdService
      *
      * @return string
      */
-    public function getAuthUrl() : string
+    public function getAuthUrl()
     {
         $connectionReflection = new \ReflectionClass($this->connection);
         $getAuthUrlMethod = $connectionReflection->getMethod('getAuthUrl');
