@@ -16,7 +16,8 @@
     "require": {
         "php": ">=5.5.0",
         "symfony/framework-bundle": ">=2.8",
-        "picqer/moneybird-php-client": "~0.9"
+        "picqer/moneybird-php-client": "~0.9",
+        "beberlei/assert": "^2.7"
     },
 
     "require-dev": {

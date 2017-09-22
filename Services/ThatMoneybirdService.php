@@ -4,10 +4,13 @@
 namespace Thatside\MoneybirdBundle\Services;
 
 use Picqer\Financials\Moneybird\Connection;
+use Picqer\Financials\Moneybird\Entities\Administration;
+use Picqer\Financials\Moneybird\Entities\Contact;
 use Picqer\Financials\Moneybird\Moneybird;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thatside\MoneybirdBundle\Event\MoneybirdTokenEvent;
+use Thatside\MoneybirdBundle\Model\SyncableContactInterface;
 
 /**
  * Class ThatMoneybirdService
@@ -67,6 +70,8 @@ class ThatMoneybirdService
             $token = $this->connection->getAccessToken();
             $this->eventDispatcher->dispatch(MoneybirdTokenEvent::NAME, new MoneybirdTokenEvent($token));
 
+            $this->connection->setAdministrationId($this->codeFetcher->getAdministrationId());
+
             $this->moneybird = new Moneybird($this->connection);
         }
     }
@@ -77,6 +82,21 @@ class ThatMoneybirdService
     public function getMoneybird()
     {
         return $this->moneybird;
+    }
+
+    /**
+     * Get Moneybird authorization URL from private method of Connection class
+     *
+     * @return string
+     */
+    public function getAuthUrl()
+    {
+        $connectionReflection = new \ReflectionClass($this->connection);
+        $getAuthUrlMethod = $connectionReflection->getMethod('getAuthUrl');
+        $getAuthUrlMethod->setAccessible(true);
+        $authUrl = $getAuthUrlMethod->invoke($this->connection);
+
+        return $authUrl;
     }
 
     /**
@@ -97,26 +117,25 @@ class ThatMoneybirdService
     }
 
     /**
-     * Get Moneybird authorization URL from private method of Connection class
-     *
-     * @return string
-     */
-    public function getAuthUrl()
-    {
-        $connectionReflection = new \ReflectionClass($this->connection);
-        $getAuthUrlMethod = $connectionReflection->getMethod('getAuthUrl');
-        $getAuthUrlMethod->setAccessible(true);
-        $authUrl = $getAuthUrlMethod->invoke($this->connection);
-
-        return $authUrl;
-    }
-
-    /**
-     * @return mixed
+     * @return Administration[]
      */
     public function getAdministrations()
     {
         return $this->moneybird->administration()->getAll();
+    }
+
+    /**
+     * Create Moneybird contact
+     * @param SyncableContactInterface $contact
+     *
+     * @return Contact
+     */
+    public function syncContact(SyncableContactInterface $contact)
+    {
+        $contactData = $contact->getMoneybirdContactData();
+        $contactData->validate();
+
+        return $this->moneybird->contact($contactData->attributes())->save();
     }
 
     /**
@@ -132,6 +151,6 @@ class ThatMoneybirdService
      */
     private function updateToken()
     {
-        $this->token = $this->codeFetcher->getAuthorizationToken();
+        $this->token = $this->codeFetcher->getAccessToken();
     }
 }
