@@ -10,7 +10,6 @@ env:
 
 before_script:
   - composer self-update
-  - composer require symfony/framework-bundle:${SYMFONY_VERSION} --prefer-source
   - composer install --no-dev --prefer-source
 
 script: vendor/bin/phpunit
