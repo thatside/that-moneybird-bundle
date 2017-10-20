@@ -121,7 +121,12 @@ class ThatMoneybirdService
      */
     public function getAdministrations()
     {
-        return $this->moneybird->administration()->getAll();
+        $administrationId = $this->codeFetcher->getAdministrationId();
+        $this->connection->setAdministrationId(null);
+        $administrations = $this->moneybird->administration()->getAll();
+        $this->connection->setAdministrationId($administrationId);
+
+        return $administrations;
     }
 
     /**
