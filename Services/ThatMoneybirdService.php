@@ -137,10 +137,14 @@ class ThatMoneybirdService
      */
     public function syncContact(SyncableContactInterface $contact)
     {
-        $contactData = $contact->getMoneybirdContactData();
-        $contactData->validate();
+        if ($this->isMoneybirdEnabled()) {
+            $contactData = $contact->getMoneybirdContactData();
+            $contactData->validate();
 
-        return $this->moneybird->contact($contactData->attributes())->save();
+            return $this->moneybird->contact($contactData->attributes())->save();
+        } else {
+            throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
+        }
     }
 
     /**
