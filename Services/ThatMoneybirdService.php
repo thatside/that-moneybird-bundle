@@ -147,11 +147,6 @@ class ThatMoneybirdService
         }
     }
 
-    public function syncInvoice()
-    {
-
-    }
-
     /**
      * Update authorization code from code fetcher
      */
