@@ -17,4 +17,11 @@ interface SyncableInvoiceInterface
      * @return MoneybirdInvoiceData
      */
     public function getMoneybirdInvoiceData();
+
+    /**
+     * Get Moneybird invoice id from entity
+     *
+     * @return string
+     */
+    public function getMoneybirdInvoiceId();
 }

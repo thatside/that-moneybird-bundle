@@ -6,11 +6,13 @@ namespace Thatside\MoneybirdBundle\Services;
 use Picqer\Financials\Moneybird\Connection;
 use Picqer\Financials\Moneybird\Entities\Administration;
 use Picqer\Financials\Moneybird\Entities\Contact;
+use Picqer\Financials\Moneybird\Entities\SalesInvoice;
 use Picqer\Financials\Moneybird\Moneybird;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thatside\MoneybirdBundle\Event\MoneybirdTokenEvent;
 use Thatside\MoneybirdBundle\Model\SyncableContactInterface;
+use Thatside\MoneybirdBundle\Model\SyncableInvoiceInterface;
 
 /**
  * Class ThatMoneybirdService
@@ -147,9 +149,36 @@ class ThatMoneybirdService
         }
     }
 
-    public function syncInvoice()
+    public function clearInvoiceDetails(SyncableInvoiceInterface $syncableInvoice)
     {
+        if ($this->isMoneybirdEnabled()) {
+            $invoiceId = $syncableInvoice->getMoneybirdInvoiceId();
+            if ($invoiceId) {
+                $invoice = $this->moneybird->salesInvoice()->find($syncableInvoice->getMoneybirdInvoiceId());
 
+                $details = $invoice->details;
+                foreach ($details as $detail) {
+                    $detail->_destroy = true;
+                }
+
+                $invoice->details = $details;
+                $invoice->save();
+            }
+        } else {
+            throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
+        }
+    }
+
+    public function syncInvoice(SyncableInvoiceInterface $syncableInvoice)
+    {
+        if ($this->isMoneybirdEnabled()) {
+            $invoiceData = $syncableInvoice->getMoneybirdInvoiceData();
+            $invoiceData->validate();
+
+            return $this->moneybird->salesInvoice($invoiceData->attributes())->save();
+        } else {
+            throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
+        }
     }
 
     /**
