@@ -24,8 +24,8 @@ class MoneybirdContactData extends Contact
     {
         if ($this->company_name === null) {
             Assert::lazy()
-                ->that($this->first_name, 'firstName', 'First name should be provided')->notEmpty()
-                ->that($this->last_name, 'lastName', 'Last name should be provided')->notEmpty()
+                ->that($this->firstname, 'firstName', 'First name should be provided')->notEmpty()
+                ->that($this->lastname, 'lastName', 'Last name should be provided')->notEmpty()
                 ->verifyNow();
         } else {
             Assert::lazy()
