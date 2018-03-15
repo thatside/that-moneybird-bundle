@@ -3,10 +3,12 @@
 
 namespace Thatside\MoneybirdBundle\Services;
 
+use DTO\MoneybirdWebhookData;
 use Picqer\Financials\Moneybird\Connection;
 use Picqer\Financials\Moneybird\Entities\Administration;
 use Picqer\Financials\Moneybird\Entities\Contact;
 use Picqer\Financials\Moneybird\Entities\SalesInvoice;
+use Picqer\Financials\Moneybird\Entities\Webhook;
 use Picqer\Financials\Moneybird\Moneybird;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -176,6 +178,28 @@ class ThatMoneybirdService
             $invoiceData->validate();
 
             return $this->moneybird->salesInvoice($invoiceData->attributes())->save();
+        } else {
+            throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
+        }
+    }
+
+    public function createWebhook(MoneybirdWebhookData $webhookData)
+    {
+        if ($this->isMoneybirdEnabled()) {
+            $webhookData->validate();
+
+            return $this->moneybird->webhook($webhookData->attributes())->save();
+        } else {
+            throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
+        }
+    }
+
+    public function removeWebhook(MoneybirdWebhookData $webhookData)
+    {
+        if ($this->isMoneybirdEnabled()) {
+            $webhookData->validate();
+
+            return $this->moneybird->webhook($webhookData->attributes())->delete();
         } else {
             throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
         }
