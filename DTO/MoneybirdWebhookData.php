@@ -1,6 +1,6 @@
 <?php
 
-namespace DTO;
+namespace Thatside\MoneybirdBundle\DTO;
 
 use Assert\Assert;
 use Picqer\Financials\Moneybird\Entities\Webhook;

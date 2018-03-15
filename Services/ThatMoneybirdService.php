@@ -3,7 +3,6 @@
 
 namespace Thatside\MoneybirdBundle\Services;
 
-use DTO\MoneybirdWebhookData;
 use Picqer\Financials\Moneybird\Connection;
 use Picqer\Financials\Moneybird\Entities\Administration;
 use Picqer\Financials\Moneybird\Entities\Contact;
@@ -15,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thatside\MoneybirdBundle\Event\MoneybirdTokenEvent;
 use Thatside\MoneybirdBundle\Model\SyncableContactInterface;
 use Thatside\MoneybirdBundle\Model\SyncableInvoiceInterface;
+use Thatside\MoneybirdBundle\DTO\MoneybirdWebhookData;
 
 /**
  * Class ThatMoneybirdService
