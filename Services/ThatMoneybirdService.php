@@ -197,8 +197,6 @@ class ThatMoneybirdService
     public function removeWebhook(MoneybirdWebhookData $webhookData)
     {
         if ($this->isMoneybirdEnabled()) {
-            $webhookData->validate();
-
             return $this->moneybird->webhook($webhookData->attributes())->delete();
         } else {
             throw new \BadMethodCallException('Moneybird is not enabled at the moment.');
